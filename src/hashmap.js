@@ -47,7 +47,6 @@ export default class HashMap {
     const bucketIndex = this.hash(key);
     const bucketLinkedList = this.buckets[bucketIndex];
     if (bucketLinkedList === undefined) {
-      console.log("Key not found");
       return null;
     }
     const listSize = bucketLinkedList.size();
@@ -62,8 +61,22 @@ export default class HashMap {
     }
     return null;
   }
+
+  has(key) {
+    const bucketIndex = this.hash(key);
+    const bucketLinkedList = this.buckets[bucketIndex];
+    if (bucketLinkedList === undefined) {
+      return false;
+    }
+    const listSize = bucketLinkedList.size();
+    let currentNode = bucketLinkedList.headNode;
+
+    for (let i = 0; i < listSize; i += 1) {
+      if (currentNode.value.key === key) {
+        return true;
+      }
+      currentNode = currentNode.link;
+    }
+    return false;
+  }
 }
-
-// has(key) {
-
-// }

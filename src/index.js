@@ -29,4 +29,17 @@ console.log("Get Vish, Result:", hashmap.get("Vish"));
 console.log("Get Marty, Result:", hashmap.get("Marty"));
 console.log("Get RandomString0, result:", hashmap.get("RandomString0"));
 console.log("Get Random, Result:", hashmap.get("Random"));
+console.log("Get Bravo, Result:", hashmap.get("Bravo"));
+console.log("---------------------------------\n\n");
+
+console.log("----- HAS TESTING -----");
+console.log(
+  "Current keys are Carlos: 2, Vish: 2, Marty: 3, RandomString0: Alpha",
+);
+console.log("Has Carlos, Result:", hashmap.has("Carlos"));
+console.log("Has Vish, Result:", hashmap.has("Vish"));
+console.log("Has Marty, Result:", hashmap.has("Marty"));
+console.log("Has RandomString0, result:", hashmap.has("RandomString0"));
+console.log("Has Random, Result:", hashmap.has("Random"));
+console.log("Has Bravo, Result:", hashmap.has("Bravo"));
 console.log("---------------------------------\n\n");
