@@ -79,4 +79,31 @@ export default class HashMap {
     }
     return false;
   }
+
+  remove(key) {
+    const isInHashMap = this.has(key);
+    if (isInHashMap) {
+      const bucketIndex = this.hash(key);
+      const bucketLinkedList = this.buckets[bucketIndex];
+      let currentNode = bucketLinkedList.headNode;
+      let previousNode = null;
+
+      while (currentNode) {
+        if (currentNode.value.key === key) {
+          if (previousNode === null) {
+            // If the node to be removed is the head node
+            bucketLinkedList.headNode = currentNode.link;
+          } else {
+            // If the node to be removed is not the head node
+            previousNode.link = currentNode.link;
+          }
+          return true;
+        }
+
+        previousNode = currentNode;
+        currentNode = currentNode.link;
+      }
+    }
+    return false;
+  }
 }

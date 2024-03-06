@@ -215,7 +215,6 @@ export default class LinkedList {
   removeAt(index) {
     const size = this.size();
     if (index < 0 || index > size - 1) {
-      console.log("Index out of Bounds");
       return;
     }
 

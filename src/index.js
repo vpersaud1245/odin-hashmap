@@ -43,3 +43,15 @@ console.log("Has RandomString0, result:", hashmap.has("RandomString0"));
 console.log("Has Random, Result:", hashmap.has("Random"));
 console.log("Has Bravo, Result:", hashmap.has("Bravo"));
 console.log("---------------------------------\n\n");
+
+console.log("----- REMOVE TESTING -----");
+console.log(
+  "Current keys are Carlos: 2, Vish: 2, Marty: 3, RandomString0: Alpha",
+);
+console.log("Remove Carlos, Result:", hashmap.remove("Carlos"));
+console.log(hashmap);
+console.log("Remove RandomString0, result:", hashmap.remove("RandomString0"));
+console.log(hashmap);
+console.log("Remove Testing, result:", hashmap.remove("Testing"));
+// await console.log("Remove Marty, Result:", hashmap.remove("Marty"));
+// console.log(hashmap);
