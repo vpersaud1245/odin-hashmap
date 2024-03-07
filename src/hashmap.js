@@ -106,4 +106,14 @@ export default class HashMap {
     }
     return false;
   }
+
+  length() {
+    let length = 0;
+    this.buckets.forEach((bucket) => {
+      if (bucket) {
+        length += bucket.size();
+      }
+    });
+    return length;
+  }
 }

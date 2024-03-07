@@ -44,6 +44,13 @@ console.log("Has Random, Result:", hashmap.has("Random"));
 console.log("Has Bravo, Result:", hashmap.has("Bravo"));
 console.log("---------------------------------\n\n");
 
+console.log("----- HAS TESTING -----");
+console.log(
+  "Current keys are Carlos: 2, Vish: 2, Marty: 3, RandomString0: Alpha",
+);
+console.log(hashmap.length());
+console.log("---------------------------------\n\n");
+
 console.log("----- REMOVE TESTING -----");
 console.log(
   "Current keys are Carlos: 2, Vish: 2, Marty: 3, RandomString0: Alpha",
