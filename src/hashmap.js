@@ -97,6 +97,9 @@ export default class HashMap {
             // If the node to be removed is not the head node
             previousNode.link = currentNode.link;
           }
+          if (bucketLinkedList.headNode === null) {
+            this.buckets[bucketIndex] = undefined;
+          }
           return true;
         }
 
@@ -115,5 +118,9 @@ export default class HashMap {
       }
     });
     return length;
+  }
+
+  clear() {
+    this.buckets = this.buckets.fill();
   }
 }

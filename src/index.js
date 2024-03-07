@@ -60,5 +60,10 @@ console.log(hashmap);
 console.log("Remove RandomString0, result:", hashmap.remove("RandomString0"));
 console.log(hashmap);
 console.log("Remove Testing, result:", hashmap.remove("Testing"));
-// await console.log("Remove Marty, Result:", hashmap.remove("Marty"));
-// console.log(hashmap);
+console.log("---------------------------------\n\n");
+
+console.log("----- CLEAR TESTING -----");
+console.log(hashmap);
+console.log("Current keys are Vish: 2, Marty: 3");
+console.log("Clear hashmap", hashmap.clear());
+console.log(hashmap);
