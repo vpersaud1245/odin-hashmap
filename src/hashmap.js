@@ -145,9 +145,10 @@ export default class HashMap {
   }
 
   toString() {
+    let hashmapString = "";
     for (let i = 0; i < this.capacity; i += 1) {
       if (this.buckets[i].headNode === null) {
-        console.log(`${i}:null`);
+        hashmapString = hashmapString.concat(`${i}:null  `);
       } else {
         let currentNode = this.buckets[i].headNode;
         let nodeString = `${i}: (${currentNode.value.key}, ${currentNode.value.value}) ->`;
@@ -158,10 +159,10 @@ export default class HashMap {
             `(${currentNode.value.key}, ${currentNode.value.value}) ->`,
           );
         }
-        nodeString = nodeString.concat(" ", "null");
-        console.log(nodeString);
+        nodeString = nodeString.concat(" ", "null  ");
+        hashmapString = hashmapString.concat(nodeString);
       }
     }
-    console.log("\n\n");
+    console.log(hashmapString);
   }
 }
