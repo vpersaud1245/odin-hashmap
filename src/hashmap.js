@@ -101,9 +101,7 @@ export default class HashMap {
             // If the node to be removed is not the head node
             previousNode.link = currentNode.link;
           }
-          if (bucketLinkedList.headNode === null) {
-            this.buckets[bucketIndex] = undefined;
-          }
+
           return true;
         }
 
@@ -142,6 +140,22 @@ export default class HashMap {
       }
     });
     return keys;
+  }
+
+  values() {
+    const values = [];
+    this.buckets.forEach((bucket) => {
+      if (bucket.headNode === null) {
+        return;
+      }
+      let currentNode = bucket.headNode;
+      values.push(bucket.headNode.value.value);
+      while (currentNode.link != null) {
+        currentNode = currentNode.link;
+        values.push(currentNode.value.value);
+      }
+    });
+    return values;
   }
 
   toString() {
