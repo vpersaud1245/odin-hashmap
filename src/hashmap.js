@@ -2,7 +2,8 @@ import LinkedList from "./linkedlist";
 
 export default class HashMap {
   constructor() {
-    this.buckets = new Array(16);
+    this.capacity = 16;
+    this.buckets = Array.from(new Array(this.capacity), () => new LinkedList());
   }
 
   /**
@@ -23,28 +24,29 @@ export default class HashMap {
 
   set(key, value) {
     const bucketIndex = this.hash(key);
-    if (!this.buckets[bucketIndex]) {
-      this.buckets[bucketIndex] = new LinkedList();
+    // Check if index is in range
+    if (this.buckets[bucketIndex].size() === 0) {
       this.buckets[bucketIndex].append({ key, value });
-      return;
-    }
-    const bucketLinkedList = this.buckets[bucketIndex];
-    const listSize = bucketLinkedList.size();
-    let currentNode = bucketLinkedList.headNode;
+    } else {
+      const bucketLinkedList = this.buckets[bucketIndex];
+      const listSize = bucketLinkedList.size();
+      let currentNode = bucketLinkedList.headNode;
 
-    for (let i = 0; i < listSize; i += 1) {
-      if (currentNode.value.key === key) {
-        currentNode.value.value = value;
-        return;
+      for (let i = 0; i < listSize; i += 1) {
+        if (currentNode.value.key === key) {
+          currentNode.value.value = value;
+          return;
+        }
+        currentNode = currentNode.link;
       }
-      currentNode = currentNode.link;
-    }
 
-    bucketLinkedList.append({ key, value });
+      bucketLinkedList.append({ key, value });
+    }
   }
 
   get(key) {
     const bucketIndex = this.hash(key);
+    // Check if index is in range
     const bucketLinkedList = this.buckets[bucketIndex];
     if (bucketLinkedList === undefined) {
       return null;
@@ -64,6 +66,7 @@ export default class HashMap {
 
   has(key) {
     const bucketIndex = this.hash(key);
+    // Check if index is in range
     const bucketLinkedList = this.buckets[bucketIndex];
     if (bucketLinkedList === undefined) {
       return false;
@@ -84,6 +87,7 @@ export default class HashMap {
     const isInHashMap = this.has(key);
     if (isInHashMap) {
       const bucketIndex = this.hash(key);
+      // Check if index is in range
       const bucketLinkedList = this.buckets[bucketIndex];
       let currentNode = bucketLinkedList.headNode;
       let previousNode = null;
@@ -121,6 +125,43 @@ export default class HashMap {
   }
 
   clear() {
-    this.buckets = this.buckets.fill();
+    this.buckets = new Array(this.capacity).fill(new LinkedList());
+  }
+
+  keys() {
+    const keys = [];
+    this.buckets.forEach((bucket) => {
+      if (bucket.headNode === null) {
+        return;
+      }
+      let currentNode = bucket.headNode;
+      keys.push(bucket.headNode.value.key);
+      while (currentNode.link != null) {
+        currentNode = currentNode.link;
+        keys.push(currentNode.value.key);
+      }
+    });
+    return keys;
+  }
+
+  toString() {
+    for (let i = 0; i < this.capacity; i += 1) {
+      if (this.buckets[i].headNode === null) {
+        console.log(`${i}:null`);
+      } else {
+        let currentNode = this.buckets[i].headNode;
+        let nodeString = `${i}: (${currentNode.value.key}, ${currentNode.value.value}) ->`;
+        while (currentNode.link != null) {
+          currentNode = currentNode.link;
+          nodeString = nodeString.concat(
+            " ",
+            `(${currentNode.value.key}, ${currentNode.value.value}) ->`,
+          );
+        }
+        nodeString = nodeString.concat(" ", "null");
+        console.log(nodeString);
+      }
+    }
+    console.log("\n\n");
   }
 }

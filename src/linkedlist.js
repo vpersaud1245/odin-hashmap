@@ -170,12 +170,12 @@ export default class LinkedList {
 
     // Append headNode value to the string
     let currentNode = this.headNode;
-    let linkedListString = `(${currentNode.value}) -> `;
+    let linkedListString = `(${currentNode.key}: ${currentNode.value}) -> `;
 
     // Iterate through the list and append node values to the string
     while (currentNode.link != null) {
       currentNode = currentNode.link;
-      linkedListString += `(${currentNode.value}) -> `;
+      linkedListString += `(${currentNode.key}: ${currentNode.value}) -> `;
     }
 
     // Append "null" to signify the end of the list and log to the console
