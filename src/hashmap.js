@@ -3,36 +3,44 @@ import LinkedList from "./linkedlist";
 export default class HashMap {
   constructor() {
     this.capacity = 16;
+    this.size = 0;
+    this.loadFactor = 0.75;
     this.buckets = Array.from(new Array(this.capacity), () => new LinkedList());
   }
 
   /**
    * Generates a hashcode for the given key
+   * https://cp-algorithms.com/string/string-hashing.html
    * @param {String} key
    */
   hash(key) {
-    let hashCode = 0;
+    const PRIME = 131;
+    const MOD_NUMBER = 28657;
 
-    const primeNumber = 31;
+    let primePower = 1;
+    let hashCode = 0;
     for (let i = 0; i < key.length; i += 1) {
-      hashCode =
-        primeNumber * (hashCode % this.buckets.length) + key.charCodeAt(i);
+      const charCode = key[i].charCodeAt();
+      hashCode = (hashCode + charCode * primePower) % MOD_NUMBER;
+      primePower = (primePower * PRIME) % MOD_NUMBER;
     }
 
-    return hashCode % this.buckets.length;
+    return hashCode % this.capacity;
   }
 
   set(key, value) {
     const bucketIndex = this.hash(key);
+
     // Check if index is in range
     if (this.buckets[bucketIndex].size() === 0) {
       this.buckets[bucketIndex].append({ key, value });
+      this.size += 1;
+      console.log("Size", this.size);
     } else {
       const bucketLinkedList = this.buckets[bucketIndex];
-      const listSize = bucketLinkedList.size();
       let currentNode = bucketLinkedList.headNode;
 
-      for (let i = 0; i < listSize; i += 1) {
+      while (currentNode !== null) {
         if (currentNode.value.key === key) {
           currentNode.value.value = value;
           return;
@@ -41,6 +49,38 @@ export default class HashMap {
       }
 
       bucketLinkedList.append({ key, value });
+      this.size += 1;
+      console.log("Size", this.size);
+    }
+
+    if (this.size / this.capacity >= 0.75) {
+      this.capacity *= 2;
+      const newBucketArray = Array.from(
+        new Array(this.capacity),
+        () => new LinkedList(),
+      );
+      this.size = 0;
+
+      for (let i = 0; i < this.buckets.length; i += 1) {
+        if (this.buckets[i].headNode !== null) {
+          let currentNode = this.buckets[i].headNode;
+
+          while (currentNode !== null) {
+            const newHashIndex = this.hash(currentNode.value.key);
+
+            newBucketArray[newHashIndex].append({
+              key: currentNode.value.key,
+              value: currentNode.value.value,
+            });
+
+            this.size += 1;
+
+            currentNode = currentNode.link;
+          }
+        }
+      }
+
+      this.buckets = newBucketArray;
     }
   }
 
@@ -102,6 +142,8 @@ export default class HashMap {
             previousNode.link = currentNode.link;
           }
 
+          this.size -= 1;
+          console.log("Size", this.size);
           return true;
         }
 
@@ -123,7 +165,9 @@ export default class HashMap {
   }
 
   clear() {
-    this.buckets = new Array(this.capacity).fill(new LinkedList());
+    this.buckets = Array.from(new Array(this.capacity), () => new LinkedList());
+    this.size = 0;
+    console.log("Size", this.size);
   }
 
   keys() {
@@ -176,20 +220,29 @@ export default class HashMap {
 
   toString() {
     let hashmapString = "";
-    for (let i = 0; i < this.capacity; i += 1) {
+    for (let i = 0; i < this.buckets.length; i += 1) {
       if (this.buckets[i].headNode === null) {
-        hashmapString = hashmapString.concat(`${i}:null  `);
+        if (i < 10) {
+          hashmapString = hashmapString.concat(`${i}:  null\n`);
+        } else {
+          hashmapString = hashmapString.concat(`${i}: null\n`);
+        }
       } else {
         let currentNode = this.buckets[i].headNode;
-        let nodeString = `${i}: (${currentNode.value.key}, ${currentNode.value.value}) ->`;
+        let nodeString = "";
+        if (i < 10) {
+          nodeString = `${i}:  (${currentNode.value.key}, ${currentNode.value.value}) -> `;
+        } else {
+          nodeString = `${i}: (${currentNode.value.key}, ${currentNode.value.value}) -> `;
+        }
         while (currentNode.link != null) {
           currentNode = currentNode.link;
           nodeString = nodeString.concat(
-            " ",
-            `(${currentNode.value.key}, ${currentNode.value.value}) ->`,
+            "",
+            `(${currentNode.value.key}, ${currentNode.value.value}) -> `,
           );
         }
-        nodeString = nodeString.concat(" ", "null  ");
+        nodeString = nodeString.concat("", "null\n");
         hashmapString = hashmapString.concat(nodeString);
       }
     }

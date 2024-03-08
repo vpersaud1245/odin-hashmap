@@ -77,7 +77,8 @@ console.log("---------------------------------\n\n");
 console.log("----- REMOVE TESTING -----");
 console.log("Current Hashmap:");
 hashmap.toString();
-console.log("Remove RandomString0, result:", hashmap.remove("RandomString0"));
+console.log("Remove RandomString0, result:");
+hashmap.remove("RandomString0");
 hashmap.toString();
 console.log("Remove Testing, result:", hashmap.remove("Testing"));
 hashmap.toString();
@@ -89,4 +90,14 @@ hashmap.toString();
 console.log("Clear hashmap");
 hashmap.clear();
 hashmap.toString();
+console.log("---------------------------------\n\n");
+
+console.log("----- CAPACITY TESTING -----");
+console.log("Current Hashmap:");
+for (let i = 0; i < 7; i += 1) {
+  hashmap.set(`Key ${i}`, `${i}`);
+  hashmap.set(`RandomKey${i}`, `${i}`);
+}
+hashmap.toString();
+
 console.log("---------------------------------\n\n");
