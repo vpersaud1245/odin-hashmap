@@ -68,6 +68,12 @@ hashmap.toString();
 console.log(hashmap.values());
 console.log("---------------------------------\n\n");
 
+console.log("----- ENTRIES TESTING -----");
+console.log("Current Hashmap:");
+hashmap.toString();
+console.log(hashmap.entries());
+console.log("---------------------------------\n\n");
+
 console.log("----- REMOVE TESTING -----");
 console.log("Current Hashmap:");
 hashmap.toString();

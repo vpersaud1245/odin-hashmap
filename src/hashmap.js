@@ -158,6 +158,22 @@ export default class HashMap {
     return values;
   }
 
+  entries() {
+    const entries = [];
+    this.buckets.forEach((bucket) => {
+      if (bucket.headNode === null) {
+        return;
+      }
+      let currentNode = bucket.headNode;
+      entries.push([bucket.headNode.value.key, bucket.headNode.value.value]);
+      while (currentNode.link != null) {
+        currentNode = currentNode.link;
+        entries.push([currentNode.value.key, bucket.headNode.value.value]);
+      }
+    });
+    return entries;
+  }
+
   toString() {
     let hashmapString = "";
     for (let i = 0; i < this.capacity; i += 1) {
