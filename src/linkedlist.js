@@ -37,16 +37,10 @@ export default class LinkedList {
    */
   size() {
     let listSize = 0;
-
-    // If list is empty return 0
-    if (this.headNode === null) return listSize;
-
-    // Set current node to the head node and add one to the list size
     let currentNode = this.headNode;
-    listSize += 1;
 
     // Iterate through list and add 1 to list size for each node
-    while (currentNode.link != null) {
+    while (currentNode != null) {
       listSize += 1;
       currentNode = currentNode.link;
     }
@@ -74,16 +68,16 @@ export default class LinkedList {
 
   /**
    *
-   * @param {*} value
-   * @returns True if the passed in value is in the list and otherwise returns false.
+   * @param {*} key
+   * @returns True if the passed in key is in the list and otherwise returns false.
    */
-  contains(value) {
+  contains(key) {
     const listSize = this.size();
     let currentNode = this.headNode;
 
-    // Iterate thorough list and return true if value is found
+    // Iterate thorough list and return true if key is found
     for (let i = 0; i < listSize; i += 1) {
-      if (currentNode.value === value) return true;
+      if (currentNode.key === key) return true;
       currentNode = currentNode.link;
     }
     return false;

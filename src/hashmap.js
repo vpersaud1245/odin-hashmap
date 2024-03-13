@@ -83,21 +83,8 @@ export default class HashMap {
 
   has(key) {
     const bucketIndex = this.#hash(key);
-    // Check if index is in range
-    const bucketLinkedList = this.buckets[bucketIndex];
-    if (bucketLinkedList === undefined) {
-      return false;
-    }
-    const listSize = bucketLinkedList.size();
-    let currentNode = bucketLinkedList.headNode;
-
-    for (let i = 0; i < listSize; i += 1) {
-      if (currentNode.key === key) {
-        return true;
-      }
-      currentNode = currentNode.link;
-    }
-    return false;
+    this.#checkIndexRange(bucketIndex);
+    return this.buckets[bucketIndex].contains(key);
   }
 
   remove(key) {
