@@ -9,9 +9,9 @@ export default class LinkedList {
    * Adds a new node containing value to the end of the list
    * @param {*} value
    */
-  append(value) {
+  append(key, value) {
     // Create Node to be appended
-    const newNode = new Node(value);
+    const newNode = new Node(key, value);
     // Set headNode to new node if list is empty
     if (this.headNode === null) {
       this.headNode = newNode;
@@ -22,16 +22,13 @@ export default class LinkedList {
     while (currentNode.link != null) {
       currentNode = currentNode.link;
     }
+
+    if (currentNode.key === key) {
+      currentNode.value = value;
+      return;
+    }
     // link the last element to the new element
     currentNode.link = newNode;
-  }
-
-  /**
-   * Adds a new node containing value to the start of the list
-   * @param {*} value
-   */
-  prepend(value) {
-    this.headNode = new Node(value, this.headNode);
   }
 
   /**
@@ -58,30 +55,6 @@ export default class LinkedList {
 
   /**
    *
-   * @returns first node in the list, null if list is empty
-   */
-  head() {
-    return this.headNode;
-  }
-
-  /**
-   *
-   * @returns The last node in the list, null if empty
-   */
-  tail() {
-    // Return null if list is empty
-    if (this.headNode === null) return null;
-
-    // Iterate to end of the list and return the last node
-    let currentNode = this.headNode;
-    while (currentNode.link != null) {
-      currentNode = currentNode.link;
-    }
-    return currentNode;
-  }
-
-  /**
-   *
    * @param {*} index
    * @returns The node at the given index
    */
@@ -97,28 +70,6 @@ export default class LinkedList {
       currentNode = currentNode.link;
     }
     return currentNode;
-  }
-
-  /**
-   *
-   * Removes the last element from the list
-   */
-  pop() {
-    const listSize = this.size();
-    if (listSize === 0) {
-      console.log("List is empty");
-      return;
-    }
-
-    // Reset head node to null if list size is 1
-    if (listSize === 1) {
-      this.headNode = null;
-      return;
-    }
-
-    // Remove link on second to last node
-    const secondToLastNode = this.at(listSize - 2);
-    secondToLastNode.link = null;
   }
 
   /**
@@ -140,16 +91,16 @@ export default class LinkedList {
 
   /**
    *
-   * @param {*} value
-   * @returns The index of the node containing value, or null if not found.
+   * @param {*} key
+   * @returns The index of the node containing key, or null if not found.
    */
-  find(value) {
+  find(key) {
     const listSize = this.size();
     let currentNode = this.headNode;
 
     // Iterate through list and return index of node if value is found
     for (let i = 0; i < listSize; i += 1) {
-      if (currentNode.value === value) {
+      if (currentNode.key === key) {
         return i;
       }
       currentNode = currentNode.link;

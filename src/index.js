@@ -94,6 +94,8 @@ console.log("---------------------------------\n\n");
 
 console.log("----- CAPACITY TESTING -----");
 console.log("Current Hashmap:");
+hashmap.toString();
+console.log("Add 14 entries");
 for (let i = 0; i < 7; i += 1) {
   hashmap.set(`Key ${i}`, `${i}`);
   hashmap.set(`RandomKey${i}`, `${i}`);

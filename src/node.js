@@ -1,5 +1,6 @@
 export default class Node {
-  constructor(value = null, link = null) {
+  constructor(key = null, value = null, link = null) {
+    this.key = key;
     this.value = value;
     this.link = link;
   }

@@ -8,12 +8,18 @@ export default class HashMap {
     this.buckets = Array.from(new Array(this.capacity), () => new LinkedList());
   }
 
+  #checkIndexRange(index) {
+    if (index < 0 || index >= this.buckets.length) {
+      throw new Error("Trying to access index out of bound");
+    }
+  }
+
   /**
    * Generates a hashcode for the given key
    * https://cp-algorithms.com/string/string-hashing.html
    * @param {String} key
    */
-  hash(key) {
+  #hash(key) {
     const PRIME = 131;
     const MOD_NUMBER = 28657;
 
@@ -28,31 +34,7 @@ export default class HashMap {
     return hashCode % this.capacity;
   }
 
-  set(key, value) {
-    const bucketIndex = this.hash(key);
-
-    // Check if index is in range
-    if (this.buckets[bucketIndex].size() === 0) {
-      this.buckets[bucketIndex].append({ key, value });
-      this.size += 1;
-      console.log("Size", this.size);
-    } else {
-      const bucketLinkedList = this.buckets[bucketIndex];
-      let currentNode = bucketLinkedList.headNode;
-
-      while (currentNode !== null) {
-        if (currentNode.value.key === key) {
-          currentNode.value.value = value;
-          return;
-        }
-        currentNode = currentNode.link;
-      }
-
-      bucketLinkedList.append({ key, value });
-      this.size += 1;
-      console.log("Size", this.size);
-    }
-
+  #optimizeArraySize() {
     if (this.size / this.capacity >= 0.75) {
       this.capacity *= 2;
       const newBucketArray = Array.from(
@@ -66,12 +48,12 @@ export default class HashMap {
           let currentNode = this.buckets[i].headNode;
 
           while (currentNode !== null) {
-            const newHashIndex = this.hash(currentNode.value.key);
+            const newHashIndex = this.#hash(currentNode.key);
 
-            newBucketArray[newHashIndex].append({
-              key: currentNode.value.key,
-              value: currentNode.value.value,
-            });
+            newBucketArray[newHashIndex].append(
+              currentNode.key,
+              currentNode.value,
+            );
 
             this.size += 1;
 
@@ -84,28 +66,23 @@ export default class HashMap {
     }
   }
 
-  get(key) {
-    const bucketIndex = this.hash(key);
-    // Check if index is in range
-    const bucketLinkedList = this.buckets[bucketIndex];
-    if (bucketLinkedList === undefined) {
-      return null;
-    }
-    const listSize = bucketLinkedList.size();
-    let currentNode = bucketLinkedList.headNode;
+  set(key, value) {
+    const bucketIndex = this.#hash(key);
+    this.#checkIndexRange(bucketIndex);
+    this.buckets[bucketIndex].append(key, value);
+    this.size += 1;
+    this.#optimizeArraySize();
+  }
 
-    // Iterate thorough list and return the node value if key is found
-    for (let i = 0; i < listSize; i += 1) {
-      if (currentNode.value.key === key) {
-        return currentNode.value.value;
-      }
-      currentNode = currentNode.link;
-    }
-    return null;
+  get(key) {
+    const bucketIndex = this.#hash(key);
+    this.#checkIndexRange(bucketIndex);
+    const bucketLinkedList = this.buckets[bucketIndex];
+    return bucketLinkedList.at(bucketLinkedList.find(key)).value || null;
   }
 
   has(key) {
-    const bucketIndex = this.hash(key);
+    const bucketIndex = this.#hash(key);
     // Check if index is in range
     const bucketLinkedList = this.buckets[bucketIndex];
     if (bucketLinkedList === undefined) {
@@ -115,7 +92,7 @@ export default class HashMap {
     let currentNode = bucketLinkedList.headNode;
 
     for (let i = 0; i < listSize; i += 1) {
-      if (currentNode.value.key === key) {
+      if (currentNode.key === key) {
         return true;
       }
       currentNode = currentNode.link;
@@ -126,14 +103,14 @@ export default class HashMap {
   remove(key) {
     const isInHashMap = this.has(key);
     if (isInHashMap) {
-      const bucketIndex = this.hash(key);
+      const bucketIndex = this.#hash(key);
       // Check if index is in range
       const bucketLinkedList = this.buckets[bucketIndex];
       let currentNode = bucketLinkedList.headNode;
       let previousNode = null;
 
       while (currentNode) {
-        if (currentNode.value.key === key) {
+        if (currentNode.key === key) {
           if (previousNode === null) {
             // If the node to be removed is the head node
             bucketLinkedList.headNode = currentNode.link;
@@ -143,7 +120,6 @@ export default class HashMap {
           }
 
           this.size -= 1;
-          console.log("Size", this.size);
           return true;
         }
 
@@ -167,7 +143,6 @@ export default class HashMap {
   clear() {
     this.buckets = Array.from(new Array(this.capacity), () => new LinkedList());
     this.size = 0;
-    console.log("Size", this.size);
   }
 
   keys() {
@@ -177,10 +152,10 @@ export default class HashMap {
         return;
       }
       let currentNode = bucket.headNode;
-      keys.push(bucket.headNode.value.key);
+      keys.push(bucket.headNode.key);
       while (currentNode.link != null) {
         currentNode = currentNode.link;
-        keys.push(currentNode.value.key);
+        keys.push(currentNode.key);
       }
     });
     return keys;
@@ -193,10 +168,10 @@ export default class HashMap {
         return;
       }
       let currentNode = bucket.headNode;
-      values.push(bucket.headNode.value.value);
+      values.push(bucket.headNode.value);
       while (currentNode.link != null) {
         currentNode = currentNode.link;
-        values.push(currentNode.value.value);
+        values.push(currentNode.value);
       }
     });
     return values;
@@ -209,10 +184,10 @@ export default class HashMap {
         return;
       }
       let currentNode = bucket.headNode;
-      entries.push([bucket.headNode.value.key, bucket.headNode.value.value]);
+      entries.push([bucket.headNode.key, bucket.headNode.value]);
       while (currentNode.link != null) {
         currentNode = currentNode.link;
-        entries.push([currentNode.value.key, bucket.headNode.value.value]);
+        entries.push([currentNode.key, bucket.headNode.value]);
       }
     });
     return entries;
@@ -231,15 +206,15 @@ export default class HashMap {
         let currentNode = this.buckets[i].headNode;
         let nodeString = "";
         if (i < 10) {
-          nodeString = `${i}:  (${currentNode.value.key}, ${currentNode.value.value}) -> `;
+          nodeString = `${i}:  (${currentNode.key}, ${currentNode.value}) -> `;
         } else {
-          nodeString = `${i}: (${currentNode.value.key}, ${currentNode.value.value}) -> `;
+          nodeString = `${i}: (${currentNode.key}, ${currentNode.value}) -> `;
         }
         while (currentNode.link != null) {
           currentNode = currentNode.link;
           nodeString = nodeString.concat(
             "",
-            `(${currentNode.value.key}, ${currentNode.value.value}) -> `,
+            `(${currentNode.key}, ${currentNode.value}) -> `,
           );
         }
         nodeString = nodeString.concat("", "null\n");
