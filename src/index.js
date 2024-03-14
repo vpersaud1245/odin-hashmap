@@ -77,8 +77,7 @@ console.log("---------------------------------\n\n");
 console.log("----- REMOVE TESTING -----");
 console.log("Current Hashmap:");
 hashmap.toString();
-console.log("Remove RandomString0, result:");
-hashmap.remove("RandomString0");
+console.log("Remove RandomString0, result:", hashmap.remove("RandomString0"));
 hashmap.toString();
 console.log("Remove Testing, result:", hashmap.remove("Testing"));
 hashmap.toString();
@@ -101,5 +100,4 @@ for (let i = 0; i < 7; i += 1) {
   hashmap.set(`RandomKey${i}`, `${i}`);
 }
 hashmap.toString();
-
 console.log("---------------------------------\n\n");

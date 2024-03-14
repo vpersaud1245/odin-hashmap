@@ -91,28 +91,10 @@ export default class HashMap {
     const isInHashMap = this.has(key);
     if (isInHashMap) {
       const bucketIndex = this.#hash(key);
-      // Check if index is in range
-      const bucketLinkedList = this.buckets[bucketIndex];
-      let currentNode = bucketLinkedList.headNode;
-      let previousNode = null;
-
-      while (currentNode) {
-        if (currentNode.key === key) {
-          if (previousNode === null) {
-            // If the node to be removed is the head node
-            bucketLinkedList.headNode = currentNode.link;
-          } else {
-            // If the node to be removed is not the head node
-            previousNode.link = currentNode.link;
-          }
-
-          this.size -= 1;
-          return true;
-        }
-
-        previousNode = currentNode;
-        currentNode = currentNode.link;
-      }
+      this.#checkIndexRange(bucketIndex);
+      this.buckets[bucketIndex].remove(key);
+      this.size -= 1;
+      return true;
     }
     return false;
   }
@@ -120,9 +102,7 @@ export default class HashMap {
   length() {
     let length = 0;
     this.buckets.forEach((bucket) => {
-      if (bucket) {
-        length += bucket.size();
-      }
+      length += bucket.size();
     });
     return length;
   }

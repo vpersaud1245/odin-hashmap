@@ -154,24 +154,26 @@ export default class LinkedList {
   }
 
   /**
-   * Removes the node at the given index.
-   * @param {*} index
+   * Removes the node containing given key.
+   * @param {*} key
    */
-  removeAt(index) {
-    const size = this.size();
-    if (index < 0 || index > size - 1) {
-      return;
-    }
+  remove(key) {
+    let currentNode = this.headNode;
+    let previousNode = null;
 
-    const nodeBeforeIndexToRemove = this.at(index - 1);
-    const nodeAfterIndexToRemove = this.at(index + 1);
+    while (currentNode) {
+      if (currentNode.key === key) {
+        if (previousNode === null) {
+          // If the node to be removed is the head node
+          this.headNode = currentNode.link;
+        } else {
+          // If the node to be removed is not the head node
+          previousNode.link = currentNode.link;
+        }
+      }
 
-    if (index === 0) {
-      this.headNode = nodeAfterIndexToRemove;
-    } else if (index === size - 1) {
-      nodeBeforeIndexToRemove.link = null;
-    } else {
-      nodeBeforeIndexToRemove.link = nodeAfterIndexToRemove;
+      previousNode = currentNode;
+      currentNode = currentNode.link;
     }
   }
 }
